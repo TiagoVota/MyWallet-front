@@ -6,6 +6,7 @@ import GlobalStyle from './styles/GlobalStyle';
 import SignIn from './pages/signIn/SignIn';
 import SignUp from './pages/signUp/SignUp';
 import StatementPage from './pages/statement/index';
+import NewEntry from './pages/newEntry/NewEntry';
 
 
 function App() {
@@ -32,6 +33,10 @@ function App() {
 
 					<Route path='/' exact>
 						<StatementPage />
+					</Route>
+
+					<Route path='/new-entry' exact>
+						<NewEntry />
 					</Route>
 
 				</Switch>
