@@ -1,19 +1,21 @@
-import { useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useState, useContext } from 'react'
+import { useHistory, Link } from 'react-router-dom'
 import styled from 'styled-components'
 
+import UserContext from '../../contexts/UserContext'
 import { submitEntry } from '../../services/service.wallet'
 
 
 const NewEntry = () => {
+	const { userInfo: { token } } = useContext(UserContext)
 	const [value, setMoney] = useState('')
 	const [description, setDescription] = useState('')
 	const history = useHistory()
 
 	const handleSubmit = (event) => {
 		event.preventDefault()
-		
-		submitEntry(value, description)
+
+		submitEntry(token, value, description)
 			.then(() => {
 				setMoney('')
 				setDescription('')
@@ -27,7 +29,9 @@ const NewEntry = () => {
 	
 	return (
 		<Container>
-			<Header>Nova entrada</Header>
+			<Header>
+				<Link to='/'>Nova entrada</Link>
+			</Header>
 
 			<form onSubmit={handleSubmit}>
 				<Input

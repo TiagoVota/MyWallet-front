@@ -7,6 +7,7 @@ import SignIn from './pages/signIn/SignIn';
 import SignUp from './pages/signUp/SignUp';
 import StatementPage from './pages/statement/index';
 import NewEntry from './pages/newEntry/NewEntry';
+import NewOutflow from './pages/newOutflow/NewOutflow';
 
 
 function App() {
@@ -37,6 +38,10 @@ function App() {
 
 					<Route path='/new-entry' exact>
 						<NewEntry />
+					</Route>
+
+					<Route path='/new-outflow' exact>
+						<NewOutflow />
 					</Route>
 
 				</Switch>
