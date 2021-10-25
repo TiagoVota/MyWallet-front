@@ -16,8 +16,8 @@ const SignIn = () => {
 	const handleSubmit = (event) => {
 		event.preventDefault()
 		postSignIn(email, password)
-			.then(({ data: { token } }) => {
-				const userInfo = {token}
+			.then(({ data: { token, name } }) => {
+				const userInfo = {token, name}
 				setUserInfo(userInfo)
 
 				localStorage.setItem('userInfo', JSON.stringify(userInfo))

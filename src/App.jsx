@@ -5,6 +5,7 @@ import UserContext from './contexts/UserContext';
 import GlobalStyle from './styles/GlobalStyle';
 import SignIn from './pages/signIn/SignIn';
 import SignUp from './pages/signUp/SignUp';
+import StatementPage from './pages/statement/index';
 
 
 function App() {
@@ -27,6 +28,10 @@ function App() {
 
 					<Route path='/sign-up' exact>
 						<SignUp />
+					</Route>
+
+					<Route path='/' exact>
+						<StatementPage />
 					</Route>
 
 				</Switch>
