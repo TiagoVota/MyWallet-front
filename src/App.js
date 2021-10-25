@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import UserContext from './contexts/UserContext';
 import GlobalStyle from './styles/GlobalStyle';
 import SignIn from './pages/signIn/SignIn';
+import SignUp from './pages/signUp/SignUp';
 
 
 function App() {
@@ -20,8 +21,12 @@ function App() {
 				<GlobalStyle />
 
 				<Switch>
-					<Route path='/login' exact>
+					<Route path='/sign-in' exact>
 						<SignIn />
+					</Route>
+
+					<Route path='/sign-up' exact>
+						<SignUp />
 					</Route>
 
 				</Switch>

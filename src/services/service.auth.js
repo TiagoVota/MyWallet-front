@@ -4,8 +4,8 @@ import axios from 'axios'
 const BASE_URL = 'http://localhost:4000'
 
 
-const postSignUp = (name, email, password, confirmPassword) => {
-	const body = { name, email, password, confirmPassword }
+const postSignUp = (name, email, password, repeatPassword) => {
+	const body = { name, email, password, repeatPassword }
 
 	return axios.post(`${BASE_URL}/sign-up`, body)
 }
