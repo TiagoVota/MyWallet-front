@@ -3,7 +3,7 @@ import { useHistory, Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 import UserContext from '../../contexts/UserContext'
-import { submitEntry } from '../../services/service.wallet'
+import { submitTransaction } from '../../services/service.wallet'
 
 
 const NewEntry = () => {
@@ -15,7 +15,7 @@ const NewEntry = () => {
 	const handleSubmit = (event) => {
 		event.preventDefault()
 
-		submitEntry(token, value, description)
+		submitTransaction(token, value, description)
 			.then(() => {
 				setMoney('')
 				setDescription('')

@@ -3,7 +3,7 @@ import { useHistory, Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 import UserContext from '../../contexts/UserContext'
-import { submitOutflow } from '../../services/service.wallet'
+import { submitTransaction } from '../../services/service.wallet'
 
 
 const NewOutflow = () => {
@@ -15,7 +15,7 @@ const NewOutflow = () => {
 	const handleSubmit = (event) => {
 		event.preventDefault()
 
-		submitOutflow(token, value, description)
+		submitTransaction(token, -1 * value, description)
 			.then(() => {
 				setMoney('')
 				setDescription('')
@@ -39,6 +39,7 @@ const NewOutflow = () => {
 					type='number'
 					onChange={({ target: { value }}) => setMoney(value)}
 					value={value}
+					required
 				/>
 
 				<Input
@@ -46,6 +47,7 @@ const NewOutflow = () => {
 					type='text'
 					onChange={({ target: { value }}) => setDescription(value)}
 					value={description}
+					required
 				/>
 
 				<Button type='submit'>
