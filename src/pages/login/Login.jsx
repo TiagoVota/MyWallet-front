@@ -37,7 +37,7 @@ const Login = () => {
 
 				redirect('/')
 
-			}).catch(({ request: { status }}) => handleFailRegister(status))
+			}).catch(({ request: { status }}) => handleFailLogin(status))
 	}
 
 	const clearInputs = () => {
@@ -47,7 +47,7 @@ const Login = () => {
 
 	const redirect = path => history.push(path)
 
-	const handleFailRegister = (status) => {
+	const handleFailLogin = (status) => {
 		const msgStatus = {
 			422: 'Campo(s) inválido(s)!',
 			401: 'E-mail e/ou senha incorretos(s)!',

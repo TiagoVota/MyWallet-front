@@ -34,7 +34,7 @@ const NewEntry = () => {
 
 				clearInputs()
 				history.push('/')
-			}).catch(({ request: { status }}) => handleFailRegister(status))
+			}).catch(({ request: { status }}) => handleFailTransaction(status))
 	}
 
 	const clearInputs = () => {
@@ -42,7 +42,7 @@ const NewEntry = () => {
 		setDescription('')
 	}
 
-	const handleFailRegister = (status) => {
+	const handleFailTransaction = (status) => {
 		const msgStatus = {
 			422: 'Campo(s) inválido(s)!',
 			500: 'Erro nosso, tente novamente mais tarde, por favor 🥺'

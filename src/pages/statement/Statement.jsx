@@ -1,7 +1,9 @@
 import { useContext, useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import UserContext from '../../contexts/UserContext'
+import { errorModal } from '../../factories/modalFactory'
 import { getStatements } from '../../services/service.wallet'
 
 import Item from './Item'
@@ -10,6 +12,7 @@ import Item from './Item'
 const Statement = () => {
 	const { userInfo: { token } } = useContext(UserContext)
 	const [statementsInfo, setStatementsInfo] = useState({})
+	const history = useHistory()
 	
 	const { transactionsList, balance } = statementsInfo
 	
@@ -23,8 +26,23 @@ const Statement = () => {
 
 		getStatements(token)
 			.then(({ data }) => setStatementsInfo(data))
-			.catch(error => console.log({error}))
+			.catch(({ request: { status }}) => handleFailGetTransaction(status))
 	}, [token])
+
+	const handleFailGetTransaction = (status) => {
+		const msgStatus = {
+			401: 'Não autorizado!',
+			500: 'Erro nosso, tente novamente mais tarde, por favor 🥺'
+		}
+
+		const msgToSend = msgStatus[status] || 'Problema com o servidor 🥺'
+
+		errorModal(msgToSend)
+
+		redirect('/login')
+	}
+
+	const redirect = path => history.push(path)
 
 	const makeItem = ({ value, description, date }, index) => {
 		return (

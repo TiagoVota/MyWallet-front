@@ -9,57 +9,6 @@ import { submitTransaction } from '../../services/service.wallet'
 import { errorModal, successModal } from '../../factories/modalFactory'
 
 
-// const NewOutflow = () => {
-// 	const { userInfo: { token } } = useContext(UserContext)
-// 	const [value, setMoney] = useState('')
-// 	const [description, setDescription] = useState('')
-// 	const history = useHistory()
-
-// 	const handleSubmit = (event) => {
-// 		event.preventDefault()
-
-// 		submitTransaction(token, -1 * value, description)
-// 			.then(() => {
-// 				setMoney('')
-// 				setDescription('')
-// 				history.push('/')
-// 			})
-// 			.catch((error) => {
-// 				console.log(error)
-// 				alert('Valor ou descrição inválido!')
-// 			})
-// 	}
-	
-// 	return (
-// 		<Container>
-// 			<Header>
-// 				<Link to='/'>Nova saída</Link>
-// 			</Header>
-
-// 			<form onSubmit={handleSubmit}>
-// 				<Input
-// 					placeholder='Valor'
-// 					type='number'
-// 					onChange={({ target: { value }}) => setMoney(value)}
-// 					value={value}
-// 					required
-// 				/>
-
-// 				<Input
-// 					placeholder='Descrição'
-// 					type='text'
-// 					onChange={({ target: { value }}) => setDescription(value)}
-// 					value={description}
-// 					required
-// 				/>
-
-// 				<Button type='submit'>
-// 					Salvar saída
-// 				</Button>
-// 			</form>
-// 		</Container>
-// 	)
-// }
 const NewOutflow = () => {
 	const { userInfo: { token } } = useContext(UserContext)
 	const [value, setValue] = useState('')
@@ -85,7 +34,7 @@ const NewOutflow = () => {
 
 				clearInputs()
 				history.push('/')
-			}).catch(({ request: { status }}) => handleFailRegister(status))
+			}).catch(({ request: { status }}) => handleFailTransaction(status))
 	}
 
 	const clearInputs = () => {
@@ -93,7 +42,7 @@ const NewOutflow = () => {
 		setDescription('')
 	}
 
-	const handleFailRegister = (status) => {
+	const handleFailTransaction = (status) => {
 		const msgStatus = {
 			422: 'Campo(s) inválido(s)!',
 			500: 'Erro nosso, tente novamente mais tarde, por favor 🥺'
