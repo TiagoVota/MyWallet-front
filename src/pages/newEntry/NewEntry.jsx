@@ -3,28 +3,54 @@ import { useHistory, Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 import UserContext from '../../contexts/UserContext'
+import theValidationProceeded from '../../validations/handleValidation'
+import { validateTransaction } from '../../validations/transactionValidation'
 import { submitTransaction } from '../../services/service.wallet'
+import { errorModal, successModal } from '../../factories/modalFactory'
 
 
 const NewEntry = () => {
 	const { userInfo: { token } } = useContext(UserContext)
-	const [value, setMoney] = useState('')
+	const [value, setValue] = useState('')
 	const [description, setDescription] = useState('')
 	const history = useHistory()
 
 	const handleSubmit = (event) => {
 		event.preventDefault()
 
-		submitTransaction(token, value, description)
+		const formatValue = value => Number(value.replace(',', '.'))
+		
+		const body = {
+			value: formatValue(value),
+			description,
+		}
+
+		const isValidInputs = theValidationProceeded(body, validateTransaction)
+		if (!isValidInputs) return
+
+		submitTransaction({ ...body, token })
 			.then(() => {
-				setMoney('')
-				setDescription('')
+				successModal('Entrada anotada!')
+
+				clearInputs()
 				history.push('/')
-			})
-			.catch((error) => {
-				console.log(error)
-				alert('Valor ou descrição inválido!')
-			})
+			}).catch(({ request: { status }}) => handleFailRegister(status))
+	}
+
+	const clearInputs = () => {
+		setValue('')
+		setDescription('')
+	}
+
+	const handleFailRegister = (status) => {
+		const msgStatus = {
+			422: 'Campo(s) inválido(s)!',
+			500: 'Erro nosso, tente novamente mais tarde, por favor 🥺'
+		}
+
+		const msgToSend = msgStatus[status] || 'Problema com o servidor 🥺'
+
+		errorModal(msgToSend)
 	}
 	
 	return (
@@ -34,18 +60,24 @@ const NewEntry = () => {
 			</Header>
 
 			<form onSubmit={handleSubmit}>
+				<Label htmlFor='Valor'>Valor:</Label>
 				<Input
-					placeholder='Valor'
-					type='number'
-					onChange={({ target: { value }}) => setMoney(value)}
+					id='Valor'
+					placeholder='Ex.: 42,42'
+					type='text'
+					onChange={({ target: { value }}) => setValue(value)}
 					value={value}
+					required
 				/>
 
+				<Label htmlFor='Descrição'>Descrição:</Label>
 				<Input
-					placeholder='Descrição'
+					id='Descrição'
+					placeholder='Ex.: Compras no supermercado'
 					type='text'
 					onChange={({ target: { value }}) => setDescription(value)}
 					value={description}
+					required
 				/>
 
 				<Button type='submit'>
@@ -83,6 +115,17 @@ const Header = styled.header`
 	font-weight: bold;
 	font-size: 26px;
 	line-height: 31px;
+	color: #FFFFFF;
+`
+
+const Label = styled.label`
+	font-family: Raleway;
+	font-style: normal;
+  margin-left: 5%;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 20px;
+	line-height: 24px;
 	color: #FFFFFF;
 `
 

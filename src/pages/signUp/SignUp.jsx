@@ -1,34 +1,62 @@
-import styled from 'styled-components'
 import { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
+import styled from 'styled-components'
 
+import theValidationProceeded from '../../validations/handleValidation'
+import { validateSignUp } from '../../validations/userValidation'
+import { errorModal, successModal } from '../../factories/modalFactory'
 import { postSignUp } from '../../services/service.auth'
 
 
-const SignIn = () => {
+const SignUp = () => {
 	const [name, setName] = useState('')
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
-	const [repeatPassword, setRepeatPassword] = useState('');
+	const [repeatPassword, setRepeatPassword] = useState('')
 	const history = useHistory()
 
 
 	const handleSubmit = (event) => {
 		event.preventDefault()
-		postSignUp(name, email, password, repeatPassword)
+
+		const body = {
+			name,
+			email: email?.toLowerCase(),
+			password,
+			repeatPassword,
+		}
+
+		const isValidInputs = theValidationProceeded(body, validateSignUp)
+		if (!isValidInputs) return
+
+		postSignUp(body)
 			.then(() => {
-				alert('Cadastro realizado!')
-				history.push('/sign-in')
-				setName('')
-				setPassword('')
-				setEmail('')
-				setRepeatPassword('')
-			})
-			.catch((error) => {
-				console.log(error)
-				alert('Campo inválido!')
-			})
+				successModal('Cadastro realizado!')
+
+				clearInputs()
+				history.push('/login')
+			}).catch(({ request: { status }}) => handleFailRegister(status))
 	}
+
+	const clearInputs = () => {
+		setName('')
+		setEmail('')
+		setPassword('')
+		setRepeatPassword('')
+	}
+
+	const handleFailRegister = (status) => {
+		const msgStatus = {
+			422: 'Campo(s) inválido(s)!',
+			409: 'E-mail já cadastrado!',
+			500: 'Erro nosso, tente novamente mais tarde, por favor 🥺'
+		}
+
+		const msgToSend = msgStatus[status] || 'Problema com o servidor 🥺'
+
+		errorModal(msgToSend)
+	}
+  
 
 	return (
 		<Container>
@@ -36,32 +64,44 @@ const SignIn = () => {
 			<H1>MyWallet</H1>
 
 			<form onSubmit={handleSubmit}>
+				<Label htmlFor='Nome'>Nome:</Label>
 				<Input
-					placeholder='Nome'
+					id='Nome'
+					placeholder='Ex: Meu Lindo Nome'
 					type='text'
 					onChange={({ target: { value }}) => setName(value)}
 					value={name}
+					required
 				/>
 
+				<Label htmlFor='E-mail'>E-mail:</Label>
 				<Input
-					placeholder='E-mail'
+					id='E-mail'
+					placeholder='Ex: meulindoemail@email.com'
 					type='email'
 					onChange={({ target: { value }}) => setEmail(value)}
 					value={email}
+					required
 				/>
 
+				<Label htmlFor='Senha'>Senha:</Label>
 				<Input
-					placeholder='Senha'
+					id='Senha'
+					placeholder='Ex: Senha!123'
 					type='text'
 					onChange={({ target: { value }}) => setPassword(value)}
 					value={password}
+					required
 				/>
 
+				<Label htmlFor='Confirme sua senha'>Confirme sua senha:</Label>
 				<Input
-					placeholder='Confirme a senha'
+					id='Confirme sua senha'
+					placeholder='Ex: Senha!123'
 					type='text'
 					onChange={({ target: { value }}) => setRepeatPassword(value)}
 					value={repeatPassword}
+					required
 				/>
 
 				<Button type='submit'>
@@ -69,7 +109,7 @@ const SignIn = () => {
 				</Button>
 			</form>
 
-			<Link to='/sign-in'>
+			<Link to='/login'>
 				<P>Já tem uma conta? Entre agora!</P>
 			</Link>
 
@@ -78,7 +118,7 @@ const SignIn = () => {
 }
 
 
-export default SignIn
+export default SignUp
 
 
 const Container = styled.div`
@@ -98,6 +138,17 @@ const H1 = styled.h1`
 	font-weight: normal;
 	font-size: 32px;
 	line-height: 50px;
+	color: #FFFFFF;
+`
+
+const Label = styled.label`
+	font-family: Raleway;
+	font-style: normal;
+  margin-left: 5%;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 20px;
+	line-height: 24px;
 	color: #FFFFFF;
 `
 

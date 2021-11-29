@@ -1,23 +1,23 @@
 import axios from 'axios'
 
 
-const BASE_URL = 'http://localhost:4000'
+const BASE_URL = 'http://localhost:4242'
 
 
-const postSignUp = (name, email, password, repeatPassword) => {
+const postSignUp = ({ name, email, password, repeatPassword }) => {
 	const body = { name, email, password, repeatPassword }
 
 	return axios.post(`${BASE_URL}/sign-up`, body)
 }
 
-const postSignIn = (email, password) => {
+const postLogin = ({ email, password }) => {
 	const body = { email, password }
 
-	return axios.post(`${BASE_URL}/sign-in`, body)
+	return axios.post(`${BASE_URL}/login`, body)
 }
 
 
 export {
 	postSignUp,
-	postSignIn
+	postLogin
 }

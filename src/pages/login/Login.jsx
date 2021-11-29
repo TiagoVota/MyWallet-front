@@ -1,36 +1,64 @@
-import styled from 'styled-components'
 import { useState, useContext } from 'react'
 import { Link, useHistory } from 'react-router-dom'
+import styled from 'styled-components'
 
-import { postSignIn } from '../../services/service.auth'
-import UserContext from '../../contexts/UserContext';
+import UserContext from '../../contexts/UserContext'
+import theValidationProceeded from '../../validations/handleValidation'
+import { validateLogin } from '../../validations/userValidation'
+import { errorModal, successModal } from '../../factories/modalFactory'
+import { postLogin } from '../../services/service.auth'
 
 
-const SignIn = () => {
+const Login = () => {
+	const { setUserInfo } = useContext(UserContext)
+	const history = useHistory()
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
-	const history = useHistory()
-	const { setUserInfo } = useContext(UserContext);
 
 
 	const handleSubmit = (event) => {
 		event.preventDefault()
-		postSignIn(email, password)
-			.then(({ data: { token, name } }) => {
-				const userInfo = {token, name}
-				setUserInfo(userInfo)
 
+		const body = {
+			email: email?.toLowerCase(),
+			password
+		}
+		
+		const isValidInputs = theValidationProceeded(body, validateLogin)
+		if (!isValidInputs) return
+
+		postLogin(body)
+			.then(({ data: userInfo }) => {
+				successModal('Login realizado!')
+				clearInputs()
+
+				setUserInfo(userInfo)
 				localStorage.setItem('userInfo', JSON.stringify(userInfo))
 
-				history.push('/')
-				setPassword('')
-				setEmail('')
-			})
-			.catch((error) => {
-				console.log(error)
-				alert('E-mail ou senha inválido!')
-			})
+				redirect('/')
+
+			}).catch(({ request: { status }}) => handleFailRegister(status))
 	}
+
+	const clearInputs = () => {
+		setEmail('')
+		setPassword('')
+	}
+
+	const redirect = path => history.push(path)
+
+	const handleFailRegister = (status) => {
+		const msgStatus = {
+			422: 'Campo(s) inválido(s)!',
+			401: 'E-mail e/ou senha incorretos(s)!',
+			500: 'Erro nosso, tente novamente mais tarde, por favor 🥺'
+		}
+
+		const msgToSend = msgStatus[status] || 'Problema com o servidor 🥺'
+
+		errorModal(msgToSend)
+	}
+  
 
 	return (
 		<Container>
@@ -38,18 +66,24 @@ const SignIn = () => {
 			<H1>MyWallet</H1>
 
 			<form onSubmit={handleSubmit}>
+				<Label htmlFor='E-mail'>E-mail:</Label>
 				<Input
-					placeholder='E-mail'
+					id='E-mail'
+					placeholder='Ex: meulindoemail@email.com'
 					type='email'
 					onChange={({ target: { value }}) => setEmail(value)}
 					value={email}
+					required
 				/>
 
+				<Label htmlFor='Senha'>Senha:</Label>
 				<Input
-					placeholder='Senha'
+					id='Senha'
+					placeholder='Ex: Senha!123'
 					type='password'
 					onChange={({ target: { value }}) => setPassword(value)}
 					value={password}
+					required
 				/>
 
 				<Button type='submit'>
@@ -66,7 +100,7 @@ const SignIn = () => {
 }
 
 
-export default SignIn
+export default Login
 
 
 const Container = styled.div`
@@ -86,6 +120,17 @@ const H1 = styled.h1`
 	font-weight: normal;
 	font-size: 32px;
 	line-height: 50px;
+	color: #FFFFFF;
+`
+
+const Label = styled.label`
+	font-family: Raleway;
+	font-style: normal;
+  margin-left: 5%;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 20px;
+	line-height: 24px;
 	color: #FFFFFF;
 `
 

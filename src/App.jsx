@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { useState, useEffect } from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
-import UserContext from './contexts/UserContext';
-import GlobalStyle from './styles/GlobalStyle';
-import SignIn from './pages/signIn/SignIn';
-import SignUp from './pages/signUp/SignUp';
-import StatementPage from './pages/statement/index';
-import NewEntry from './pages/newEntry/NewEntry';
-import NewOutflow from './pages/newOutflow/NewOutflow';
+import UserContext from './contexts/UserContext'
+import GlobalStyle from './styles/GlobalStyle'
+import Login from './pages/login/Login'
+import SignUp from './pages/signUp/SignUp'
+import StatementPage from './pages/statement/index'
+import NewEntry from './pages/newEntry/NewEntry'
+import NewOutflow from './pages/newOutflow/NewOutflow'
 
 
 function App() {
@@ -24,30 +24,15 @@ function App() {
 				<GlobalStyle />
 
 				<Switch>
-					<Route path='/sign-in' exact>
-						<SignIn />
-					</Route>
-
-					<Route path='/sign-up' exact>
-						<SignUp />
-					</Route>
-
-					<Route path='/' exact>
-						<StatementPage />
-					</Route>
-
-					<Route path='/new-entry' exact>
-						<NewEntry />
-					</Route>
-
-					<Route path='/new-outflow' exact>
-						<NewOutflow />
-					</Route>
-
+					<Route path='/login' exact component={Login}/>
+					<Route path='/sign-up' exact component={SignUp}/>
+					<Route path='/' exact component={StatementPage}/>
+					<Route path='/new-entry' exact component={NewEntry}/>
+					<Route path='/new-outflow' exact component={NewOutflow}/>
 				</Switch>
 			</Router>
 		</UserContext.Provider>
 	)
 }
 
-export default App;
+export default App

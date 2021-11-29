@@ -13,7 +13,7 @@ const Header = () => {
 	const logout = () => {
 		localStorage.removeItem('userInfo')
 		setUserInfo('')
-		history.push('/sign-in')
+		history.push('/login')
 	}
 
 	return (

@@ -1,10 +1,10 @@
 import axios from 'axios'
 
 
-const BASE_URL = 'http://localhost:4000'
+const BASE_URL = 'http://localhost:4242'
 
 
-const submitTransaction = (token, value, description) => {
+const submitTransaction = ({ token, value, description }) => {
 	const body = {
 		value,
 		description
@@ -15,7 +15,7 @@ const submitTransaction = (token, value, description) => {
 
 
 const getStatements = (token) => {
-	return axios.get(`${BASE_URL}/statement`, makeConfig(token))
+	return axios.get(`${BASE_URL}/statements`, makeConfig(token))
 }
 
 const makeConfig = (token) => {
@@ -23,10 +23,10 @@ const makeConfig = (token) => {
 		headers: {
 			'Authorization': `Bearer ${token}`
 		}
-	};
+	}
 	
-	return config;
-};
+	return config
+}
 
 
 export {

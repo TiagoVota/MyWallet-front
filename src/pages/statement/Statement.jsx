@@ -1,50 +1,52 @@
-import { useContext, useEffect, useState } from "react"
-import dayjs from 'dayjs'
-import styled from "styled-components"
+import { useContext, useEffect, useState } from 'react'
+import styled from 'styled-components'
 
-import UserContext from "../../contexts/UserContext"
-import { getStatements } from "../../services/service.wallet"
+import UserContext from '../../contexts/UserContext'
+import { getStatements } from '../../services/service.wallet'
+
+import Item from './Item'
 
 
 const Statement = () => {
 	const { userInfo: { token } } = useContext(UserContext)
 	const [statementsInfo, setStatementsInfo] = useState({})
 	
-	const { statementsList, balance } = statementsInfo
+	const { transactionsList, balance } = statementsInfo
 	
 	const isPositive = value => Boolean(value >= 0)
-	const formatValue = value => Number(value).toFixed(2).replace('.', ',').replace('-', '')
-	const formatDate = date => dayjs(date).format('DD/MM')
+	const formatValue = (value) => {
+		return Number(value).toFixed(2).replace('.', ',').replace('-', '')
+	}
 
 	useEffect(() => {
 		if (!token) return 
 
 		getStatements(token)
-			.then(({ data }) => {setStatementsInfo(data); console.log(data)})
+			.then(({ data }) => setStatementsInfo(data))
 			.catch(error => console.log({error}))
 	}, [token])
 
 	const makeItem = ({ value, description, date }, index) => {
 		return (
-			<ItemContainer key={index} isPositive={isPositive(value)}>
-				<div>
-					<h1>{formatDate(date)}</h1>
-					<h2>{description}</h2>
-				</div>
-
-				<h3>{formatValue(value)}</h3>
-			</ItemContainer>
+			<Item
+				key={index}
+				value={value}
+				description={description}
+				date={date}
+				isPositive={isPositive(value)}
+				formatValue={formatValue}
+			/>
 		)
 	}
 
 	return (
 		<Container>
 			{
-				Boolean(statementsList?.[0])
+				transactionsList?.[0]
 					? (
 						<>
 							<StatementsWrapper>
-								{statementsList.map(makeItem)}
+								{transactionsList.map(makeItem)}
 							</StatementsWrapper>
 
 							<BalanceBox isPositive={isPositive(balance)}>
@@ -80,35 +82,7 @@ const StatementsWrapper = styled.div`
 	overflow-y: scroll;
 `
 
-const ItemContainer = styled.div`
-	height: 35px;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	font-family: Raleway;
-	font-style: normal;
-	font-weight: normal;
-	font-size: 16px;
-	line-height: 19px;
 
-	div {
-		display: flex;
-	}
-
-	h1 {
-		color: #C6C6C6;
-	}
-
-	h2 {
-		padding-left: 15px;
-		color: #000000;
-	}
-
-	h3 {
-		color: ${p => p.isPositive ? '#03AC00' : '#C70000'};
-		text-align: right;
-	}
-`
 
 const P = styled.p`
 	top: 50%;
