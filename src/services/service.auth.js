@@ -1,7 +1,6 @@
 import axios from 'axios'
 
-
-const BASE_URL = 'http://localhost:4242'
+import BASE_URL from './baseUrl'
 
 
 const postSignUp = ({ name, email, password, repeatPassword }) => {
