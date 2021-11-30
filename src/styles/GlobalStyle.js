@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from 'styled-components'
 
 const GlobalStyle = createGlobalStyle`
     /* http://meyerweb.com/eric/tools/css/reset/ 
@@ -63,5 +63,5 @@ const GlobalStyle = createGlobalStyle`
         text-decoration: none;
         color: inherit;
     }
-`;
-export default GlobalStyle;
+`
+export default GlobalStyle
